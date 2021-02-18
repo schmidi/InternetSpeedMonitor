@@ -3,6 +3,7 @@ import re
 import subprocess
 from influxdb import InfluxDBClient
 import json
+import time
 
 response = subprocess.Popen('speedtest --accept-license --accept-gdpr -f json', shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
 data = json.loads(response)
@@ -13,6 +14,7 @@ influxport = os.environ["INFLUXPORT"]
 influxuser = os.environ["INFLUXUSER"]
 influxpass = os.environ["INFLUXPASS"]
 influxdatabasename = os.environ["INFLUXDATABASENAME"]
+sleeptime = os.environ["INTERVAL"]
 
 speed_data = [
         {
@@ -35,3 +37,4 @@ print(json.dumps(speed_data, indent = 1))
 client = InfluxDBClient(influxhost, influxport, influxuser, influxpass, influxdatabasename)
 
 client.write_points(speed_data)
+time.sleep(sleeptime)
