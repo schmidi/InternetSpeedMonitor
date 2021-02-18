@@ -23,7 +23,8 @@ speed_data = [
             "fields" : {
                 "download" : float(data['download']['bandwidth']) * 8,
                 "upload" : float(data['upload']['bandwidth']) * 8,
-                "ping" : float(data['ping']['latency'])
+                "ping" : float(data['ping']['latency']),
+                "jitter" : float(data['ping']['jitter'])
                 }
             }
         ]
