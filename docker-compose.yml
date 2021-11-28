@@ -1,26 +1,20 @@
 version: '3.4'
 services:
   ism:
-    image: vonproteus/internet-speed-monitor
+    image: schmidi/internet-speed-monitor
     environment:
+      - INTERVAL=300
       - INFLUXDATABASENAME=ism
+      - INFLUXHOST=localhost
+      - INFLUXPORT=8086
+      - INFLUXUSER=root
+      - INFLUXPASS=toor
+      - SERVER_ID=99
     deploy:
       mode: replicated
       replicas: 1
       restart_policy:
         condition: any
         delay: 31m
-
-
-
-  influx:
-    image: influxdb
-    volumes:
-    - data:/var/lib/influxdb 
-    environment:
-    - INFLUXDB_WRITE_USER=root
-    - INFLUXDB_WRITE_USER_PASSWORD=toor
-    - INFLUXDB_DB=ism
-
 volumes:
   data:
