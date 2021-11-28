@@ -12,12 +12,18 @@ influxuser = os.environ["INFLUXUSER"]
 influxpass = os.environ["INFLUXPASS"]
 influxdatabasename = os.environ["INFLUXDATABASENAME"]
 sleeptime = int(os.environ["INTERVAL"])
+server_id = int(os.environ["SERVER_ID"])
 
 while True:
 
-  response = subprocess.Popen('speedtest --accept-license --accept-gdpr -f json', shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
+  command = 'speedtest --accept-license --accept-gdpr -f json'
+  if server_id > 0:
+    command += ' -s '
+    command += str(server_id)
+
+  response = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')
   data = json.loads(response)
-  
+
   speed_data = [
           {
               "measurement" : "internet_speed",
@@ -32,11 +38,11 @@ while True:
                   }
               }
           ]
-  
+
   print(json.dumps(data, indent = 1))
   print(json.dumps(speed_data, indent = 1))
-  
+
   client = InfluxDBClient(influxhost, influxport, influxuser, influxpass, influxdatabasename)
-  
+
   client.write_points(speed_data)
   time.sleep(sleeptime)
